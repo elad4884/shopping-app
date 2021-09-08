@@ -1,0 +1,6 @@
+version: "3"
+services:
+    shopping_app:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev

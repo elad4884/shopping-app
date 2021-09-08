@@ -16,5 +16,5 @@ const url = `${config.DB_URL}`;
 mongoose.connect(url, { useNewUrlParser: true },
     () => console.log('connected to DB'));
 
-const port = process.env.PORT || 4000;
+const port = config.PORT;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

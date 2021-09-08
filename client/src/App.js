@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 function App() {
   return (
     <BrowserRouter>
-       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="collapse navbar-collapse" id="navbarText">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
@@ -22,21 +22,13 @@ function App() {
           </ul>
         </div>
       </nav>
-    <div style={{padding: '20px 80px'}}>
+      <div style={{ padding: '20px 80px' }}>
         <Switch>
-          <Route exact path='/'>
-            <Home />
-          </Route>
-          <Route exact path='/home'>
-            <Home />
-          </Route>
-          <Route exact path='/admin'>
-            <Admin />
-          </Route>
-          <Route exact path='/stats'>
-            <Stats />
-          </Route>
-        </Switch> 
+          <Route exact path='/' component={Home} />
+          <Route exact path='/home' component={Home} />
+          <Route exact path='/admin' component={Admin} />
+          <Route exact path='/stats' component={Stats} />
+        </Switch>
       </div>
     </BrowserRouter>
   );
