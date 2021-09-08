@@ -51,42 +51,24 @@ router.get("/topUniqueSold/:quantity", async (req, res) => {
   res.send(result);
 });
 
-router.get("/topDays/:quantity", async (req, res) => {
-  const dates_counts = {};
-  const carts = await Cart.find();
-  let i = 0;
-  for (let i = 0; i < carts.length; i++) {
-    const current_date = `${carts[i].time_stamp
-      .getDate()}/${carts[i].time_stamp.getMonth()+1}/${carts[i].time_stamp.getFullYear()}`;
-    const products = carts[i].products;
-    for (let j = 0; j < products.length; j++) {
-      dates_counts[current_date] === undefined ? dates_counts[current_date]=products[j].cost*products[j].amount : dates_counts[current_date]+=products[j].cost*products[j].amount;
-    }
-  }
-  const sorted_dates_counts = Object.keys(dates_counts).map(date => [date, dates_counts[date]]).sort((a, b) => b[1] - a[1]).slice(0,req.params.quantity);
-  const result = [];
-  for (let i = 0; i < sorted_dates_counts.length; i++) {
-    result.push({
-      "date": sorted_dates_counts[i][0],
-      "paid": sorted_dates_counts[i][1]
-    });
-  }
-  res.send(result);
-});
-
-router.get("/pastDays/:quantity", async (req, res) => {
+router.get("/pastDays/:quantity", async (req,res) => {
   const dates_counts = {};
   const last_date = new Date();
-  last_date.setDate(last_date.getDate() - req.params.quantity);
+  for(let i = 0; i < req.params.quantity; i++){
+    dates_counts[`${last_date.getDate()}/${last_date.getMonth()+1}/${last_date.getFullYear()}`] = 0;
+	last_date.setDate(last_date.getDate() - 1);
+  }
+
   const carts = await Cart.find({"time_stamp":  {$gt: last_date}});
   for (let i = 0; i < carts.length; i++) {
     const current_date = `${carts[i].time_stamp
       .getDate()}/${carts[i].time_stamp.getMonth()+1}/${carts[i].time_stamp.getFullYear()}`;
     const products = carts[i].products;
     for (let j = 0; j < products.length; j++) {
-      dates_counts[current_date] === undefined ? dates_counts[current_date]=products[j].cost*products[j].amount : dates_counts[current_date]+=products[j].cost*products[j].amount;
+      dates_counts[current_date] === 0 ? dates_counts[current_date]=products[j].cost*products[j].amount : dates_counts[current_date]+=products[j].cost*products[j].amount;
     }
   }
+
   const dates_counts_array = Object.keys(dates_counts).map(date => [date, dates_counts[date]]);
   const result = [];
   for (let i = 0; i < dates_counts_array.length; i++) {
@@ -95,7 +77,10 @@ router.get("/pastDays/:quantity", async (req, res) => {
       "paid": dates_counts_array[i][1]
     });
   }
+
   res.send(result);
 });
+
+
 
 module.exports = router;
